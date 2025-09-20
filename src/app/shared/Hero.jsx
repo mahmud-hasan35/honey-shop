@@ -6,19 +6,25 @@ const slides = [
     id: 1,
     title: "Welcome to MyShop!",
     subtitle: "Your trusted destination for premium products.",
-    image: "/2448229.jpg", // এখানে নিজের image দাও
+    image: "/hero4.jpg",
   },
   {
     id: 2,
     title: "Best Quality, Best Price",
     subtitle: "Handpicked collections with unbeatable offers.",
-    image: "/4910241.jpg",
+    image: "/hero1.jpg",
   },
   {
     id: 3,
     title: "Shop with Confidence",
     subtitle: "Safe, secure, and satisfying shopping experience.",
-    image: "/66251.jpg",
+    image: "/hero2.jpg",
+  },
+  {
+    id: 4,
+    title: "Shop with Confidence",
+    subtitle: "Safe, secure, and satisfying shopping experience.",
+    image: "/hero3.jpg",
   },
 ];
 

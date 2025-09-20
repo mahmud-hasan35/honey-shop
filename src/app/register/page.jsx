@@ -1,63 +1,31 @@
-"use client";
-import React, { useState } from "react";
+// RegisterComponent.jsx
+import Image from 'next/image';
 
-export default function RegisterPage() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+import RegisterForm from './component/RegisterForm';
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Name: ${form.name}\nEmail: ${form.email}\nPassword: ${form.password}`);
-  };
-
+export default function RegisterComponent() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-lg w-96"
-      >
-        <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="container mx-auto p-6">
+        <div className="bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col md:flex-row">
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full p-2 mb-3 border rounded"
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-white p-2 rounded"
-        >
-          Register
-        </button>
-      </form>
+          {/* Left: Image */}
+          <div className="md:w-1/2 hidden md:flex bg-yellow-50 p-6 items-center justify-center">
+            <div className="w-full max-w-lg">
+              <Image
+                src="/register.jpg"
+                alt="Honey Register"
+                width={700}
+                height={700}
+                className="rounded-2xl object-cover shadow-lg"
+              />
+            </div>
+          </div>
+          {/* Right: Form */}
+          <RegisterForm/>
+        </div>
+      </div>
     </div>
   );
 }

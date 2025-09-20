@@ -1,14 +1,38 @@
-"use client"
+"use client";
 
-import { signIn } from 'next-auth/react'
-import React from 'react'
+
+
+import Image from "next/image";
+import LoginForm from "./components/LoginForm";
+
+
 
 export default function LoginPage() {
+
+
+
   return (
-    <div>
-      <button onClick={() => signIn()}>Login</button>
+    <div className="flex min-h-screen">
+
+      {/* Left side image */}
+          <div className="md:w-1/2 hidden md:flex bg-yellow-50 p-6 items-center justify-center">
+            <div className="w-full max-w-lg">
+              <Image
+                src="/login.jpg"
+                alt="Honey Register"
+                width={700}
+                height={700}
+                className="rounded-2xl object-cover shadow-lg"
+              />
+            </div>
+          </div>
+
+      {/* Right side login form */}
+
+      <LoginForm/>
+
     </div>
-  )
+  );
 }
 
 
