@@ -56,7 +56,9 @@ export default function BookingUpdateForm({ product }) {
       console.log("✅ Updated Data", data);
 
       toast.dismiss();
-      toast.success("✅ Booking updated successfully!");
+setTimeout(() => {
+  toast.success("✅ Booking updated successfully!");
+}, 100);
 
       // 1.5 second পর redirect
       setTimeout(() => {
