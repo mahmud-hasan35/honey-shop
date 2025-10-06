@@ -2,9 +2,10 @@
 import { useState } from "react";
 import RegisterUser from "@/app/actions/auth/RegisterUser";
 import Link from "next/link";
-import { FaFacebookF, FaGithub, FaLinkedinIn, FaGoogle, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import SocialLogin from "@/app/login/components/SocialLogin";
 
 
 export default function RegisterForm() {
@@ -29,7 +30,7 @@ export default function RegisterForm() {
       const result = await RegisterUser({ name, email, password, redirect: false});
       if (result?.insertedId) {
         toast.success("User registered successfully!");
-        router.push('/login')
+        router.push('/')
         e.target.reset("")
       } else {
         toast.error(result?.message || "Registration failed");
@@ -112,12 +113,7 @@ export default function RegisterForm() {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-500 mb-2">Or login with</p>
-        <div className="flex justify-center space-x-4 text-xl text-gray-700">
-          <p><FaFacebookF /></p>
-          <p><FaGithub /></p>
-          <p><FaLinkedinIn /></p>
-          <p><FaGoogle /></p>
-        </div>
+        <SocialLogin/>
       </div>
 
       <p className="text-sm text-gray-500 mt-6 text-center">

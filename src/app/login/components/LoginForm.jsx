@@ -3,16 +3,13 @@
 import {
   FaEye,
   FaEyeSlash,
-  FaFacebookF,
-  FaGithub,
-  FaLinkedinIn,
-  FaGoogle,
 } from "react-icons/fa";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import SocialLogin from "./SocialLogin";
 
 
 export default function LoginForm() {
@@ -43,6 +40,7 @@ export default function LoginForm() {
       } else {
         toast.success("User login successful ✅");
         router.push('/')
+        e.target.reset("")
         
       }
     } catch (error) {
@@ -94,24 +92,15 @@ export default function LoginForm() {
           </button>
         </form>
 
+
+             <div className="mt-6 text-center">
+                  <p className="text-sm text-gray-500 mb-2">Or sign in with</p>
+                   <SocialLogin/> 
+                </div>
+
         {/* Social login section */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500 mb-2">Or sign in with</p>
-          <div className="flex justify-center space-x-4 text-xl text-gray-700">
-            <p className="cursor-pointer hover:text-blue-600">
-              <FaFacebookF />
-            </p>
-            <p className="cursor-pointer hover:text-gray-800">
-              <FaGithub />
-            </p>
-            <p className="cursor-pointer hover:text-blue-500">
-              <FaLinkedinIn />
-            </p>
-            <p className="cursor-pointer hover:text-red-500">
-              <FaGoogle />
-            </p>
-          </div>
-        </div>
+
+              
 
         <p className="text-sm text-gray-500 mt-6 text-center">
           Don’t have an account?{" "}

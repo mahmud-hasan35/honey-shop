@@ -1,14 +1,18 @@
 
 
 import React from "react";
-import dbConnect, { collectionNameObj } from "../../../../lib/dbConnect";
-import { ObjectId } from "mongodb";
+
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function HoneyDetails({ params }) {
   const p = await params;
-  const servicesCollection = await dbConnect(collectionNameObj.servicesCollection);
-  const data = await servicesCollection.findOne({ _id: new ObjectId(p.id) });
+  const res = await fetch(`http://localhost:3000/api/service/${p.id}`);
+  const data = await res.json();
+
+  
+
+  
 
   if (!data) {
     return (
@@ -60,10 +64,11 @@ export default async function HoneyDetails({ params }) {
             Price: ${data.price}
           </p>
           <p className="text-gray-700 leading-relaxed">{data.description}</p>
-
+          <Link href={`/addCard/${data._id}`}>
           <button className="px-6 py-3 w-fit rounded-lg bg-emerald-500 text-white font-semibold shadow-md hover:bg-emerald-600 transition">
             Add to Cart
           </button>
+          </Link>
         </div>
       </div>
 

@@ -4,17 +4,20 @@ import Hero from './shared/Hero';
 // import { getServerSession } from 'next-auth';
 // import { authOptions } from './api/auth/[...nextauth]/route';
 import ProductsPage from './products/page';
+import ContactPage from './contact/page';
 
 const  page =  () => {
 
   // const session = await getServerSession(authOptions)
   return (
-    <div>
+    <div className='bg-emerald-50'>
       <Hero/>
     {/* <p className='font-bold text-3xl'>This is user Info section</p>
       <UserInfo/>
       {JSON.stringify(session)} */}
       <ProductsPage/>
+
+      <ContactPage/>
     </div>
   );
 };

@@ -10,9 +10,9 @@ export default async function ServicesSection() {
  
 
   return (
-    <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-center mb-10 text-gray-800">
-        Our Services
+    <div className="container mx-auto px-4 py-12">
+      <h1 className=" text-3xl lg:text-5xl pt-10 text-emerald-600 font-bold text-center mb-10">
+        Our Product
       </h1>
 
       <div className="grid grid-cols-12 gap-6">
@@ -27,13 +27,16 @@ export default async function ServicesSection() {
               key={item._id.toString()}
               className="col-span-12 md:col-span-6 lg:col-span-4"
             >
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl hover:-translate-y-1 duration-300">
+              <div className=" rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl hover:-translate-y-1 duration-300">
                 <figure className="relative w-full h-52">
                   <Image
+                  
                     className="object-cover"
                     src={imgSrc}
                     alt={item.name || "service"}
+                    
                     fill
+                    
                   />
                 </figure>
 
@@ -43,7 +46,7 @@ export default async function ServicesSection() {
                       {item.title}
                     </h2>
                     <p className="text-lg font-bold text-emerald-500">
-                      Price: ${item.price}
+                      Price: Tk: {item.price}
                     </p>
                   </div>
 
