@@ -2,11 +2,9 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function BookingUpdateForm({ product }) {
-    
-    
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -30,12 +28,12 @@ export default function BookingUpdateForm({ product }) {
       userEmail: session?.user?.email,
       userName: session?.user?.name,
       productId: product?._id,
-      productTitle: product?.title,
-      productImage: product?.img || product?.img,
+      productTitle: product?.productTitle,
+      productImage: product?.productImage,
       price: product?.price,
     };
 
-    toast.loading("Updating booking...");
+    const loading = toast.loading("Updating booking...");
 
     try {
       const res = await fetch(
@@ -48,32 +46,24 @@ export default function BookingUpdateForm({ product }) {
       );
 
       if (!res.ok) {
-        toast.dismiss();
-        throw new Error("Failed to update booking");
+        toast.error("❌ Failed to update booking!", { id: loading });
+        return;
       }
 
-      const data = await res.json();
-      console.log("✅ Updated Data", data);
+      toast.success("✅ Booking updated successfully!", { id: loading });
 
-      toast.dismiss();
-setTimeout(() => {
-  toast.success("✅ Booking updated successfully!");
-}, 100);
-
-      // 1.5 second পর redirect
       setTimeout(() => {
         router.push("/my-products");
       }, 1500);
     } catch (error) {
-      console.error("🚨 Update Error:", error);
-      toast.dismiss();
-      toast.error("❌ Something went wrong while updating!");
+      toast.error("⚠️ Something went wrong!", { id: loading });
+      console.error(error);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-      <Toaster position="top-center" reverseOrder={false} />
+    <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg relative">
+      <Toaster position="top-center" />
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
