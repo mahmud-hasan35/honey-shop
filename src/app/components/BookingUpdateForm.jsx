@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function BookingUpdateForm({ product }) {
   const { data: session } = useSession();
@@ -33,7 +33,10 @@ export default function BookingUpdateForm({ product }) {
       price: product?.price,
     };
 
-    const loading = toast.loading("Updating booking...");
+    // 🟢 show loading toast
+    const loadingToast = toast.loading("Updating booking...", {
+      position: "top-center",
+    });
 
     try {
       const res = await fetch(
@@ -46,24 +49,29 @@ export default function BookingUpdateForm({ product }) {
       );
 
       if (!res.ok) {
-        toast.error("❌ Failed to update booking!", { id: loading });
+        toast.dismiss(loadingToast); // remove loading toast
+        toast.error("❌ Failed to update booking!", { position: "top-center" });
         return;
       }
 
-      toast.success("✅ Booking updated successfully!", { id: loading });
+      // 🟢 if success
+      toast.dismiss(loadingToast);
+      toast.success("✅ Booking updated successfully!", {
+        position: "top-center",
+      });
 
       setTimeout(() => {
         router.push("/my-products");
       }, 1500);
     } catch (error) {
-      toast.error("⚠️ Something went wrong!", { id: loading });
+      toast.dismiss(loadingToast);
+      toast.error("⚠️ Something went wrong!", { position: "top-center" });
       console.error(error);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg relative">
-      <Toaster position="top-center" />
+    <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"

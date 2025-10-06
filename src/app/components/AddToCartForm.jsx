@@ -1,21 +1,17 @@
 "use client";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
-export default function BookingUpdateForm({ product }) {
+export default function AddToCartForm({ product }) {
   const { data: session } = useSession();
-  const router = useRouter();
 
   const [formData, setFormData] = useState({
-    phone: product?.phone || "",
-    address: product?.address || "",
-    quantity: product?.quantity || 1,
-    date: product?.date || "",
+    phone: "",
+    address: "",
+    quantity: 1,
+    date: "",
   });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,66 +20,61 @@ export default function BookingUpdateForm({ product }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting) return;
-    setIsSubmitting(true);
 
-    const toastId = toast.loading("⏳ Updating booking...");
+    const payload = {
+      ...formData,
+      userEmail: session?.user?.email,
+      userName: session?.user?.name,
+      productId: product?._id,
+      productTitle: product?.title,
+      productImage: product?.img || product?.img,
+      price: product?.price,
+    };
+
+    // 🟢 show loading toast (center position)
+    const loadingToast = toast.loading("Adding product to cart...", {
+      position: "top-center",
+    });
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/my-bookings/${product._id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...formData,
-            userEmail: session?.user?.email,
-            userName: session?.user?.name,
-            productId: product?._id,
-            productTitle: product?.productTitle,
-            productImage: product?.productImage,
-            price: product?.price,
-          }),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
 
-      if (!res.ok) throw new Error("Failed to update booking");
+      const data = await res.json();
+      console.log("✅ Posted Data:", data);
 
-      toast.success("✅ Booking updated successfully!", { id: toastId });
+      toast.dismiss(loadingToast); // remove loading state
 
-      setTimeout(() => {
-        router.push("/my-products");
-      }, 1500);
+      if (data.success) {
+        toast.success("✅ Product successfully added to cart!", {
+          position: "top-center",
+        });
+
+        // reset form
+        setFormData({
+          phone: "",
+          address: "",
+          quantity: 1,
+          date: "",
+        });
+      } else {
+        toast.error("❌ Failed to add product to cart.", {
+          position: "top-center",
+        });
+      }
     } catch (error) {
-      console.error("🚨 Update Error:", error);
-      toast.error("❌ Something went wrong!", { id: toastId });
-    } finally {
-      setIsSubmitting(false);
+      toast.dismiss(loadingToast);
+      console.error("🚨 Form Submit Error:", error);
+      toast.error("⚠️ Something went wrong!", {
+        position: "top-center",
+      });
     }
   };
 
   return (
-    <div className="relative max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 2500,
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-            fontSize: "15px",
-            padding: "10px 20px",
-          },
-          success: {
-            style: { background: "#10b981" }, // emerald
-          },
-          error: {
-            style: { background: "#ef4444" }, // red
-          },
-        }}
-      />
-
+    <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -96,6 +87,7 @@ export default function BookingUpdateForm({ product }) {
             </label>
             <input
               type="text"
+              name="name"
               value={session?.user?.name || ""}
               readOnly
               className="w-full border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 text-gray-600"
@@ -108,7 +100,7 @@ export default function BookingUpdateForm({ product }) {
             </label>
             <input
               type="text"
-              value={product?.productTitle || ""}
+              value={product?.title || ""}
               readOnly
               className="w-full border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 text-gray-600"
             />
@@ -151,6 +143,7 @@ export default function BookingUpdateForm({ product }) {
             </label>
             <input
               type="email"
+              name="email"
               value={session?.user?.email || ""}
               readOnly
               className="w-full border bg-gray-100 border-gray-300 rounded-lg px-4 py-2 text-gray-600"
@@ -200,17 +193,13 @@ export default function BookingUpdateForm({ product }) {
           </div>
         </div>
 
+        {/* Submit Button */}
         <div className="col-span-1 md:col-span-2 flex justify-center">
           <button
             type="submit"
-            disabled={isSubmitting}
-            className={`px-8 py-3 text-white font-semibold rounded-lg shadow-md transition ${
-              isSubmitting
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-emerald-500 hover:bg-emerald-600"
-            }`}
+            className="px-8 py-3 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition"
           >
-            {isSubmitting ? "Updating..." : "Update Booking"}
+            Confirm Add to Cart
           </button>
         </div>
       </form>
