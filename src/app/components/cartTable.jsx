@@ -4,6 +4,7 @@ import React from "react";
 import { Pencil, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import DeleteCardButton from "./DeleteCardButton";
+import Link from "next/link";
 
 export default function CartTable({ data }) {
   const hasData = data && data.length > 0;
@@ -44,7 +45,10 @@ export default function CartTable({ data }) {
               Product
             </th>
             <th className="px-4 py-3 text-left text-gray-700 font-semibold border-b">
-              Quantity
+              Date
+            </th>
+            <th className="px-4 py-3 text-left text-gray-700 font-semibold border-b">
+              Quentity
             </th>
             <th className="px-4 py-3 text-left text-gray-700 font-semibold border-b">
               Price
@@ -76,15 +80,18 @@ export default function CartTable({ data }) {
               <td className="px-4 py-3 text-gray-700 font-medium">
                 {item.productTitle}
               </td>
+              <td className="px-4 py-3 text-gray-600">{item.date}</td>
               <td className="px-4 py-3 text-gray-600">{item.quantity}</td>
               <td className="px-4 py-3 text-gray-600">Tk: {item.price}</td>
               <td className="px-4 py-3 font-semibold text-emerald-600">
                 Tk: {item.quantity * item.price}
               </td>
               <td className="px-4 py-3 text-center space-x-2 space-y-2">
+                <Link href={`my-bookings/${item._id}`}>
                 <button className="inline-flex items-center gap-1 bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm transition">
                   <Pencil size={16} /> Edit
                 </button>
+                </Link>
                 <DeleteCardButton id={item._id} />
               </td>
             </tr>

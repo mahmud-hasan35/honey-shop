@@ -6,8 +6,8 @@ import { headers } from 'next/headers';
 
 
         const fetcMyBooking = async () => {
-        const res = await fetch("http://localhost:3000/api/service", {
-          headers: await headers()
+        const res = await fetch(`${process.env.NEXTAUTH_URL}/api/service`, {
+          headers: new Headers(await headers())
         });
         const d = await res.json();
       
