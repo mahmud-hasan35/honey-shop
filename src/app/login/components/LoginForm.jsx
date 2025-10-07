@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  FaEye,
-  FaEyeSlash,
-} from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useState } from "react";
@@ -11,41 +8,40 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import SocialLogin from "./SocialLogin";
 
-
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter()
+  const [isSocialLogin, setIsSocialLogin] = useState(false); // ✅ নতুন state
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsSocialLogin(false); // ✅ বলছি এটা social login নয়
+
     const formData = new FormData(e.target);
     const email = formData.get("email");
     const password = formData.get("password");
 
-    // validation আগে করা উচিত
     if (!email || !password) {
       toast.error("Please fill all fields");
       return;
     }
 
-    try {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+    const loadingToast = toast.loading("Logging in...");
 
-      if (res?.error) {
-        toast.error("Authentication Failed ❌");
-      } else {
-        toast.success("User login successful ✅");
-        router.push('/')
-        e.target.reset("")
-        
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    toast.dismiss(loadingToast);
+
+    if (res?.error) {
+      toast.error("Authentication Failed ❌");
+    } else {
+      toast.success("✅ User login successful!");
+      e.target.reset();
+      router.push("/");
     }
   };
 
@@ -92,15 +88,11 @@ export default function LoginForm() {
           </button>
         </form>
 
-
-             <div className="mt-6 text-center">
-                  <p className="text-sm text-gray-500 mb-2">Or sign in with</p>
-                   <SocialLogin/> 
-                </div>
-
-        {/* Social login section */}
-
-              
+        {/* Social Login */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500 mb-2">Or sign in with</p>
+          <SocialLogin setIsSocialLogin={setIsSocialLogin} />
+        </div>
 
         <p className="text-sm text-gray-500 mt-6 text-center">
           Don’t have an account?{" "}

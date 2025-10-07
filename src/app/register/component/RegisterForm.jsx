@@ -6,39 +6,57 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import SocialLogin from "@/app/login/components/SocialLogin";
-
+import { signIn } from "next-auth/react"; // ✅ এটা যোগ করো
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const router = useRouter()
+  const [isSocialLogin, setIsSocialLogin] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSocialLogin(false);
     const formData = new FormData(e.target);
     const name = formData.get("name");
     const email = formData.get("email");
     const password = formData.get("password");
     const confirm = formData.get("confirm");
 
-    if (password !== confirm) {
-      toast.error("Confirm Passwords do not match!");
-      return;
+  if (password !== confirm) {
+  toast.error("Confirm Passwords do not match!");
+  return;
+}
+
+try {
+  const result = await RegisterUser({ name, email, password, redirect: false });
+
+  if (result?.insertedId) {
+    toast.success("✅ User registered successfully!");
+
+    // 🔹 Register successful হলে সাথে সাথে login করানো হচ্ছে
+    const loginRes = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (!loginRes.error) {
+      // ✅ Auto login successful হলে শুধু redirect হবে
+      router.push("/");
+    } else {
+      toast.error("Auto login failed! Please login manually.");
+      router.push("/login");
     }
 
-    try {
-      const result = await RegisterUser({ name, email, password, redirect: false});
-      if (result?.insertedId) {
-        toast.success("User registered successfully!");
-        router.push('/')
-        e.target.reset("")
-      } else {
-        toast.error(result?.message || "Registration failed");
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-      
-    }
+    e.target.reset();
+  } else {
+    toast.error(result?.message || "Registration failed");
+  }
+} catch (error) {
+  toast.error("Something went wrong!");
+}
+
   };
 
   return (
@@ -49,6 +67,7 @@ export default function RegisterForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* name */}
         <div>
           <label className="block text-sm font-medium mb-1">Full name</label>
           <input
@@ -59,6 +78,7 @@ export default function RegisterForm() {
           />
         </div>
 
+        {/* email */}
         <div>
           <label className="block text-sm font-medium mb-1">Email</label>
           <input
@@ -69,6 +89,7 @@ export default function RegisterForm() {
           />
         </div>
 
+        {/* password + confirm */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="relative">
             <label className="block text-sm font-medium mb-1">Password</label>
@@ -113,7 +134,7 @@ export default function RegisterForm() {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-500 mb-2">Or login with</p>
-        <SocialLogin/>
+        <SocialLogin setIsSocialLogin={setIsSocialLogin}/>
       </div>
 
       <p className="text-sm text-gray-500 mt-6 text-center">

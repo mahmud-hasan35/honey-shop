@@ -38,7 +38,7 @@ export default function Navbar() {
               {/* Avatar */}
               <div className="relative">
                 <Image
-                  src={session?.user?.image || "/default-avatar.png"}
+                  src={session?.user?.image || "/pexels-1481873904-flower.jpg"}
                   alt="User Avatar"
                   width={40}
                   height={40}
