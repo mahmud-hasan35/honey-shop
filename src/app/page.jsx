@@ -5,6 +5,7 @@ import Hero from './shared/Hero';
 // import { authOptions } from './api/auth/[...nextauth]/route';
 import ProductsPage from './products/page';
 import ContactPage from './contact/page';
+import AboutPage from './about/page';
 
 const  page =  () => {
 
@@ -17,7 +18,10 @@ const  page =  () => {
       {JSON.stringify(session)} */}
       <ProductsPage/>
 
+      <AboutPage/>
+
       <ContactPage/>
+
     </div>
   );
 };

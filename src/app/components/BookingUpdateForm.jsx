@@ -8,12 +8,14 @@ export default function BookingUpdateForm({ product }) {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
+  const initialData = {
     phone: product?.phone || "",
     address: product?.address || "",
     quantity: product?.quantity || 1,
     date: product?.date || "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,6 +24,17 @@ export default function BookingUpdateForm({ product }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ✅ check if any field has been changed
+    const isChanged = JSON.stringify(formData) !== JSON.stringify(initialData);
+
+    if (!isChanged) {
+      toast.success("✅ No changes detected. Everything is already up to date!", {
+        position: "top-center",
+        duration: 1800,
+      });
+      return;
+    }
 
     const payload = {
       ...formData,
@@ -48,21 +61,21 @@ export default function BookingUpdateForm({ product }) {
         }
       );
 
+      toast.dismiss(loadingToast);
+
       if (!res.ok) {
-        toast.dismiss(loadingToast); // remove loading toast
         toast.error("❌ Failed to update booking!", { position: "top-center" });
         return;
       }
 
-      // 🟢 if success
-      toast.dismiss(loadingToast);
       toast.success("✅ Booking updated successfully!", {
         position: "top-center",
+        duration: 1500,
       });
 
       setTimeout(() => {
         router.push("/my-products");
-      }, 1500);
+      }, 1600);
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error("⚠️ Something went wrong!", { position: "top-center" });
@@ -188,12 +201,22 @@ export default function BookingUpdateForm({ product }) {
           </div>
         </div>
 
-        <div className="col-span-1 md:col-span-2 flex justify-center">
+        {/* Buttons */}
+        <div className="col-span-1 md:col-span-2 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mt-6 w-full">
           <button
             type="submit"
-            className="px-8 py-3 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition"
+            className="w-full sm:w-auto px-8 py-3 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition text-center"
           >
             Update Booking
+          </button>
+
+          {/* 🔙 Cancel button */}
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-full sm:w-auto px-8 py-3 bg-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-400 transition text-center"
+          >
+            Cancel
           </button>
         </div>
       </form>

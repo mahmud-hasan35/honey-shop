@@ -41,7 +41,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
+    <div id="contact" className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
       <motion.h1
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}

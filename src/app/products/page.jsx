@@ -6,7 +6,7 @@ export default function ProductsPage() {
   return (
 
 
-    <div>
+    <div id='product'>
        <ServicesSection/>
     </div>
 

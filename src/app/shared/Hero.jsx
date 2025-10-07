@@ -29,6 +29,15 @@ const slides = [
 ];
 
 export default function Hero() {
+
+
+    const scrollToSection = () => {
+    const section = document.getElementById("product");
+    
+    section?.scrollIntoView({ behavior: "smooth" });
+  };
+
+
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -60,7 +69,7 @@ export default function Hero() {
             <p className="mt-4 text-lg md:text-2xl text-gray-200">
               {slide.subtitle}
             </p>
-            <button className="mt-6 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-300 transition">
+            <button onClick={scrollToSection} className="mt-6 px-6 py-3 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-300 transition">
               Shop Now
             </button>
           </div>

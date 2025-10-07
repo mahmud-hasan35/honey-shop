@@ -2,9 +2,11 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation"; // ✅ import router
 
 export default function AddToCartForm({ product }) {
   const { data: session } = useSession();
+  const router = useRouter(); // ✅ initialize router
 
   const [formData, setFormData] = useState({
     phone: "",
@@ -27,11 +29,10 @@ export default function AddToCartForm({ product }) {
       userName: session?.user?.name,
       productId: product?._id,
       productTitle: product?.title,
-      productImage: product?.img || product?.img,
+      productImage: product?.img,
       price: product?.price,
     };
 
-    // 🟢 show loading toast (center position)
     const loadingToast = toast.loading("Adding product to cart...", {
       position: "top-center",
     });
@@ -39,26 +40,30 @@ export default function AddToCartForm({ product }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
-      console.log("✅ Posted Data:", data);
-
-      toast.dismiss(loadingToast); // remove loading state
+      toast.dismiss(loadingToast);
 
       if (data.success) {
         toast.success("✅ Product successfully added to cart!", {
           position: "top-center",
         });
 
-        // reset form
+        // 🟢 reset form
         setFormData({
           phone: "",
           address: "",
           quantity: 1,
           date: "",
         });
+
+        // 🟢 small delay before redirect (so toast can be seen)
+        setTimeout(() => {
+          router.push("/my-products");
+        }, 1200);
       } else {
         toast.error("❌ Failed to add product to cart.", {
           position: "top-center",

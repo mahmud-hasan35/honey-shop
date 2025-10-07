@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [showMenu, setShowMenu] = useState(false); // avatar menu toggle
+  const [showMenu, setShowMenu] = useState(false); 
   const { data: session, status } = useSession();
  
   
@@ -99,7 +99,7 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-[#1E293B] px-6 py-4 space-y-4">
           <Link href="/" className="block hover:text-yellow-400" onClick={() => setIsOpen(false)}>Home</Link>
-          <Link href="/products" className="block hover:text-yellow-400" onClick={() => setIsOpen(false)}>Products</Link>
+          <Link href="/my-products" className="block hover:text-yellow-400" onClick={() => setIsOpen(false)}>My add products</Link>
           <Link href="/about" className="block hover:text-yellow-400" onClick={() => setIsOpen(false)}>About</Link>
           <Link href="/contact" className="block hover:text-yellow-400" onClick={() => setIsOpen(false)}>Contact</Link>
 
